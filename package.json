@@ -1,0 +1,20 @@
+{
+  "name": "places-api",
+  "version": "1.0.0",
+  "description": "High-performance API for 3.4M+ business places with filtering and streaming support",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": ["api", "places", "mysql", "streaming"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "mysql2": "^3.7.0"
+  }
+}
