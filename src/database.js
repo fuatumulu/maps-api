@@ -46,8 +46,8 @@ function buildWhereClause(filters) {
   const params = [];
 
   // Equality filters
-  const equalityFields = ['city', 'state', 'type', 'county_code', 'county', 'borough', 'place_id'];
-  
+  const equalityFields = ['city', 'state', 'type', 'country_code', 'country', 'borough', 'place_id'];
+
   for (const field of equalityFields) {
     if (filters[field]) {
       conditions.push(`${field} = ?`);
@@ -89,7 +89,7 @@ function buildWhereClause(filters) {
     params.push(`%${filters.name_contains}%`);
   }
 
-  const whereClause = conditions.length > 0 
+  const whereClause = conditions.length > 0
     ? 'WHERE ' + conditions.join(' AND ')
     : '';
 
@@ -105,18 +105,18 @@ function buildWhereClause(filters) {
  */
 async function getPlaces(filters, limit = 100, offset = 0) {
   const { whereClause, params } = buildWhereClause(filters);
-  
+
   const sql = `
     SELECT 
       id, place_id, name, site, type, phone, full_address,
-      borough, street, city, state, county, county_code,
+      borough, street, city, state, country, country_code,
       latitude, longitude, rating, reviews, working_hours, about
     FROM places
     ${whereClause}
     ORDER BY id
     LIMIT ? OFFSET ?
   `;
-  
+
   params.push(limit, offset);
   return await query(sql, params);
 }
@@ -128,7 +128,7 @@ async function getPlaces(filters, limit = 100, offset = 0) {
  */
 async function countPlaces(filters) {
   const { whereClause, params } = buildWhereClause(filters);
-  
+
   const sql = `SELECT COUNT(*) as total FROM places ${whereClause}`;
   const result = await query(sql, params);
   return result[0].total;
@@ -144,27 +144,27 @@ async function countPlaces(filters) {
 async function streamPlaces(filters, limit = 0) {
   const connection = await getConnection();
   const { whereClause, params } = buildWhereClause(filters);
-  
+
   let sql = `
     SELECT 
       id, place_id, name, site, type, phone, full_address,
-      borough, street, city, state, county, county_code,
+      borough, street, city, state, country, country_code,
       latitude, longitude, rating, reviews, working_hours, about
     FROM places
     ${whereClause}
     ORDER BY id
   `;
-  
+
   if (limit > 0) {
     sql += ` LIMIT ${parseInt(limit)}`;
   }
-  
+
   const stream = connection.connection.query(sql, params).stream();
-  
+
   // Release connection when stream ends
   stream.on('end', () => connection.release());
   stream.on('error', () => connection.release());
-  
+
   return stream;
 }
 
@@ -190,11 +190,11 @@ async function getStats() {
     ORDER BY count DESC 
     LIMIT 10
   `);
-  const [countyCodeStats] = await query(`
-    SELECT county_code, COUNT(*) as count 
+  const [countryCodeStats] = await query(`
+    SELECT country_code, COUNT(*) as count 
     FROM places 
-    WHERE county_code IS NOT NULL 
-    GROUP BY county_code 
+    WHERE country_code IS NOT NULL 
+    GROUP BY country_code 
     ORDER BY count DESC 
     LIMIT 10
   `);
@@ -203,7 +203,7 @@ async function getStats() {
     total_places: totalResult.total,
     top_cities: cityStats,
     top_types: typeStats,
-    top_county_codes: countyCodeStats
+    top_country_codes: countryCodeStats
   };
 }
 

@@ -120,8 +120,8 @@ Retrieve places with filtering and pagination.
 | `city` | string | Filter by city name | - |
 | `state` | string | Filter by state | - |
 | `type` | string | Filter by business type | - |
-| `county_code` | string | Filter by county code (e.g., DE, US) | - |
-| `county` | string | Filter by county name | - |
+| `country_code` | string | Filter by country code (e.g., DE, US) | - |
+| `country` | string | Filter by country name | - |
 | `borough` | string | Filter by borough | - |
 | `place_id` | string | Filter by Google Place ID | - |
 | `reviews` | integer | Exact review count | - |
@@ -150,8 +150,8 @@ Retrieve places with filtering and pagination.
       "street": "Street 123",
       "city": "Berlin",
       "state": "BE",
-      "county": "Berlin",
-      "county_code": "DE",
+      "country": "Berlin",
+      "country_code": "DE",
       "latitude": 52.52000000,
       "longitude": 13.40500000,
       "rating": 4.50,
@@ -168,7 +168,7 @@ Retrieve places with filtering and pagination.
     "has_more": true
   },
   "filters_applied": {
-    "county_code": "DE",
+    "country_code": "DE",
     "reviews_min": "20"
   }
 }
@@ -199,7 +199,7 @@ Same as [Get Places](#get-places) (except `limit` and `offset`).
     "count": 1523456
   },
   "filters_applied": {
-    "county_code": "DE"
+    "country_code": "DE"
   }
 }
 ```
@@ -261,9 +261,9 @@ Get database statistics and top categories.
       {"type": "restaurant", "count": 450000},
       {"type": "cafe", "count": 230000}
     ],
-    "top_county_codes": [
-      {"county_code": "DE", "count": 2100000},
-      {"county_code": "AT", "count": 350000}
+    "top_country_codes": [
+      {"country_code": "DE", "count": 2100000},
+      {"country_code": "AT", "count": 350000}
     ]
   }
 }
@@ -280,7 +280,7 @@ Exact match on field values:
 ```
 ?city=Berlin
 ?type=restaurant
-?county_code=DE
+?country_code=DE
 ```
 
 ### Range Filters
@@ -314,7 +314,7 @@ Partial match on name:
 All filters are combined with AND logic:
 
 ```
-?county_code=DE&reviews_min=20&type=restaurant&rating_min=4.0
+?country_code=DE&reviews_min=20&type=restaurant&rating_min=4.0
 ```
 
 ---
@@ -400,7 +400,7 @@ async function streamPlaces(filters) {
 }
 
 // Usage
-streamPlaces({ county_code: 'DE', reviews_min: '20' });
+streamPlaces({ country_code: 'DE', reviews_min: '20' });
 ```
 
 ### Client Implementation (Python)
@@ -433,7 +433,7 @@ def stream_places(base_url, token, filters):
 stream_places(
     'https://your-api.com',
     'YOUR_TOKEN',
-    {'county_code': 'DE', 'reviews_min': '20'}
+    {'country_code': 'DE', 'reviews_min': '20'}
 )
 ```
 
@@ -441,7 +441,7 @@ stream_places(
 
 ```bash
 curl -N -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://your-api.com/api/v1/places/stream?county_code=DE&reviews_min=20" \
+  "https://your-api.com/api/v1/places/stream?country_code=DE&reviews_min=20" \
   | while read line; do
     echo "$line" | jq .
   done
@@ -480,7 +480,7 @@ curl -N -H "Authorization: Bearer YOUR_TOKEN" \
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.example.com/api/v1/places?county_code=DE&reviews_min=20&limit=1000"
+  "https://api.example.com/api/v1/places?country_code=DE&reviews_min=20&limit=1000"
 ```
 
 ### Get restaurants in Berlin with 4+ rating
@@ -501,14 +501,14 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.example.com/api/v1/places/count?county_code=DE"
+  "https://api.example.com/api/v1/places/count?country_code=DE"
 ```
 
 ### Stream millions of records
 
 ```bash
 curl -N -H "Authorization: Bearer $TOKEN" \
-  "https://api.example.com/api/v1/places/stream?county_code=DE&reviews_min=20" \
+  "https://api.example.com/api/v1/places/stream?country_code=DE&reviews_min=20" \
   > all_german_businesses.ndjson
 ```
 
