@@ -102,11 +102,22 @@ app.use((err, req, res, next) => {
 
 // Start server
 async function start() {
-    // Test database connection
-    const dbConnected = await db.testConnection();
+    let dbConnected = false;
+    let retries = 5;
+
+    while (retries > 0 && !dbConnected) {
+        dbConnected = await db.testConnection();
+        if (!dbConnected) {
+            retries--;
+            console.log(`⚠️ Database connection failed. Retrying in 5 seconds... (${retries} retries left)`);
+            if (retries > 0) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+        }
+    }
 
     if (!dbConnected) {
-        console.error('❌ Failed to connect to database. Please check your configuration.');
+        console.error('❌ Failed to connect to database after multiple attempts. Exiting...');
         process.exit(1);
     }
 
