@@ -53,10 +53,8 @@ curl -H "Authorization: Bearer your-token-here" \
 ## Base URL
 
 ```
-https://your-api-domain.com
+https://iqproject-maps-api.xgpvni.easypanel.host
 ```
-
-Replace with your actual deployed API URL.
 
 ---
 
@@ -150,21 +148,21 @@ Retrieve places with filtering and pagination.
       "street": "Street 123",
       "city": "Berlin",
       "state": "BE",
-      "country": "Berlin",
+      "country": "Germany",
       "country_code": "DE",
-      "latitude": 52.52000000,
-      "longitude": 13.40500000,
-      "rating": 4.50,
+      "latitude": 52.520,
+      "longitude": 13.405,
+      "rating": 4.5,
       "reviews": 125,
       "working_hours": "{...}",
-      "about": "Description..."
+      "about": "{...}"
     }
   ],
   "pagination": {
     "limit": 100,
     "offset": 0,
-    "count": 100,
-    "total": 15000,
+    "count": 1,
+    "total": 3464154,
     "has_more": true
   },
   "filters_applied": {
