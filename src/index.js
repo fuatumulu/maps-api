@@ -19,6 +19,17 @@ app.use(compression());
 // Parse JSON bodies
 app.use(express.json());
 
+// Health check endpoint (STAY ABOVE LIMITER to avoid health check failures)
+app.get('/health', async (req, res) => {
+    const dbConnected = await db.testConnection();
+
+    res.status(dbConnected ? 200 : 503).json({
+        status: dbConnected ? 'healthy' : 'unhealthy',
+        database: dbConnected ? 'connected' : 'disconnected',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // Rate limiting
 const limiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000, // 1 minute
@@ -33,17 +44,6 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
-
-// Health check endpoint (no auth required)
-app.get('/health', async (req, res) => {
-    const dbConnected = await db.testConnection();
-
-    res.status(dbConnected ? 200 : 503).json({
-        status: dbConnected ? 'healthy' : 'unhealthy',
-        database: dbConnected ? 'connected' : 'disconnected',
-        timestamp: new Date().toISOString()
-    });
-});
 
 // API info endpoint (no auth required)
 app.get('/', (req, res) => {
