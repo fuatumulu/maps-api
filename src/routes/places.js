@@ -20,7 +20,7 @@ function parseLimit(limitStr) {
 function extractFilters(query) {
     const filters = {};
     const filterKeys = [
-        'city', 'state', 'type', 'county_code', 'county', 'borough', 'place_id',
+        'city', 'state', 'type', 'country_code', 'country', 'borough', 'place_id',
         'reviews', 'reviews_min', 'reviews_max',
         'rating', 'rating_min', 'rating_max',
         'name_contains'
